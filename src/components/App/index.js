@@ -1,17 +1,31 @@
-import '../../App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Footer from '../Footer';
-import Header from "../Header"
-import Landing from '../Landing';
+import "../../App.css";
 
+import Footer from "../Footer";
+import Header from "../Header";
+import Landing from "../Landing";
+import Login from "../Login";
+import Signup from "../Signup";
+import ErrorPage from "../ErrorPage";
+import Welcome from "../Welcome";
 
 function App() {
   return (
-    <div>
+    <Router>
       <Header />
-      <Landing />
+
+      <Switch>
+        <Route exact path="/" component={Landing} />
+        <Route path="/welcome" component={Welcome} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route component={ErrorPage} />
+      </Switch>
+
       <Footer />
-    </div>
+    </Router>
   );
 }
 
