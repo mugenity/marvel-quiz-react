@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { QuizMarvel } from "../QuizMarvel";
 import Levels from "../Levels";
 import ProgressBar from "../ProgressBar";
+
+toast.configure();
 
 class Quiz extends Component {
   state = {
@@ -15,6 +19,7 @@ class Quiz extends Component {
     btnDisabled: true,
     userAnswer: null,
     score: 0,
+    showWelcomeMsg: false,
   };
 
   storedDataRef = React.createRef();
@@ -35,6 +40,23 @@ class Quiz extends Component {
     }
   };
 
+  showWelcomeMsg = (pseudo) => {
+    if (!this.state.showWelcomeMsg) {
+      this.setState({
+        showWelcomeMsg: true,
+      });
+      toast.warn(`Bienvenue ${pseudo}, et bonne chance!`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+      });
+    }
+  };
+
   nextQuestion = () => {
     if (this.state.idQuestion === this.state.maxQuestions - 1) {
       // End
@@ -49,6 +71,27 @@ class Quiz extends Component {
       this.setState((prevState) => ({
         score: prevState.score + 1,
       }));
+      toast.success("Bravo +1", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        bodyClassName: "toastify-color",
+      });
+    } else {
+      toast.error("Rate 0", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        bodyClassName: "toastify-color",
+      });
     }
   };
 
@@ -63,6 +106,7 @@ class Quiz extends Component {
         options: this.state.storedQuestions[this.state.idQuestion].options,
       });
     }
+
     if (this.state.idQuestion !== prevState.idQuestion) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
@@ -70,6 +114,10 @@ class Quiz extends Component {
         userAnswer: null,
         btnDisabled: true,
       });
+    }
+
+    if (this.props.userData.pseudo) {
+      this.showWelcomeMsg(this.props.userData.pseudo);
     }
   }
 
