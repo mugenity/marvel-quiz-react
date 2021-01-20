@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 const QuizOver = React.forwardRef((props, ref) => {
-  const { levelNames, score, maxQuestions, quizLevel, percent } = props;
+  const {
+    levelNames,
+    score,
+    maxQuestions,
+    quizLevel,
+    percent,
+    loadlevelQuestions,
+  } = props;
 
   const [asked, setAsked] = useState([]);
 
@@ -11,6 +18,12 @@ const QuizOver = React.forwardRef((props, ref) => {
 
   const averageGrade = maxQuestions / 2;
 
+  if (score < averageGrade) {
+    setTimeout(() => {
+      loadlevelQuestions(quizLevel);
+    }, 3000);
+  }
+
   const decision =
     score >= averageGrade ? (
       <>
@@ -18,17 +31,27 @@ const QuizOver = React.forwardRef((props, ref) => {
           {quizLevel < levelNames.length ? (
             <>
               <p className="successMsg">Bravo, passez au niveau suivant</p>
-              <button className="btnResult success">Niveau Suivant</button>
+              <button
+                onClick={() => loadlevelQuestions(quizLevel)}
+                className="btnResult success"
+              >
+                Niveau Suivant
+              </button>
             </>
           ) : (
             <>
               <p className="successMsg">Bravo, vous etes un expert !</p>
-              <button className="btnResult gameOver">Niveau Suivant</button>
+              <button
+                onClick={() => loadlevelQuestions(0)}
+                className="btnResult gameOver"
+              >
+                Accueil
+              </button>
             </>
           )}
         </div>
         <div className="percentage">
-          <div className="progressPercent">{percent}%</div>
+          <div className="progressPercent">Reussite: {percent}%</div>
           <div className="progressPercent">
             Note: {score}/{maxQuestions}
           </div>
@@ -64,6 +87,7 @@ const QuizOver = React.forwardRef((props, ref) => {
     ) : (
       <tr>
         <td colSpan="3">
+          <div className="loader"></div>
           <p style={{ textAlign: "center", color: "red" }}>Pas de reponses!</p>
         </td>
       </tr>
